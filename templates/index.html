@@ -199,11 +199,110 @@
             width: 30px;
             height: 30px;
             opacity: 0.1;
-            background-image: url('data:image/svg+xml,<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z" fill="%23166534"/></svg>');
+        }
+
+        /* Side Menu Styles */
+        .side-menu {
+            position: fixed;
+            right: -300px;
+            top: 0;
+            width: 300px;
+            height: 100vh;
+            background: white;
+            box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+            transition: right 0.3s ease;
+            z-index: 1000;
+        }
+
+        .side-menu.open {
+            right: 0;
+        }
+
+        .side-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease;
+            z-index: 999;
+        }
+
+        .side-menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Checkbox styles */
+        .category-checkbox {
+            display: none;
+        }
+
+        .category-label {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .category-label:hover {
+            background-color: #f3f4f6;
+        }
+
+        .checkbox-custom {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #047857;
+            border-radius: 4px;
+            margin-right: 12px;
+            position: relative;
+            transition: all 0.2s;
+        }
+
+        .category-checkbox:checked + .category-label .checkbox-custom {
+            background-color: #047857;
+        }
+
+        .category-checkbox:checked + .category-label .checkbox-custom::after {
+            content: '';
+            position: absolute;
+            left: 6px;
+            top: 2px;
+            width: 5px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
         }
     </style>
 </head>
 <body class="bg-gradient-to-br from-green-50 to-green-100 min-h-screen celtic-pattern py-8">
+    <!-- Side Menu -->
+    <div class="side-menu-overlay"></div>
+    <div class="side-menu">
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold text-green-800">Categories</h3>
+                <button id="closeSideMenu" class="text-gray-500 hover:text-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div id="categoryCheckboxes" class="space-y-2">
+                <!-- Checkboxes will be added here -->
+            </div>
+            <div class="mt-6">
+                <button id="selectAllCategories" class="text-sm text-green-600 hover:text-green-800 mr-4">Select All</button>
+                <button id="deselectAllCategories" class="text-sm text-green-600 hover:text-green-800">Deselect All</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Start Screen -->
     <div id="startScreen" class="start-screen fixed inset-0 flex items-center justify-center z-10">
         <div class="max-w-2xl mx-auto px-4 text-center">
@@ -235,6 +334,16 @@
             <h2 class="text-4xl font-bold text-center text-green-800 mb-2 font-irish">Cleachtadh Laethúil</h2>
             <p class="text-center text-green-600 mb-6 italic">Daily Practice</p>
             
+            <!-- Filter Button -->
+            <div class="max-w-md mx-auto mb-8 text-center">
+                <button id="openSideMenu" class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                    </svg>
+                    Filter Categories
+                </button>
+            </div>
+
             <div class="max-w-lg mx-auto">
                 <!-- Score Panel -->
                 <div class="score-panel mb-6 p-4 rounded-xl shadow-lg flex items-center justify-between">
@@ -256,6 +365,7 @@
                     </div>
                 </div>
 
+                <!-- Flashcard -->
                 <div class="celtic-border">
                     <div class="flashcard-container">
                         <div id="currentCard" class="flashcard card-texture">
@@ -294,8 +404,105 @@
 
     <script>
         let flashcards = [];
-        let currentIndex = 0;
+        let currentCardIndex = 0;
         let showingEnglish = false;
+        let filteredFlashcards = [];
+        let selectedCategories = new Set();
+
+        async function loadFlashcards() {
+            const response = await fetch('/api/flashcards');
+            flashcards = await response.json();
+            filteredFlashcards = [...flashcards];
+            
+            // Populate category checkboxes
+            const categories = [...new Set(flashcards.map(card => card.category))].sort();
+            const categoryCheckboxes = document.getElementById('categoryCheckboxes');
+            
+            categories.forEach(category => {
+                const id = `category-${category.toLowerCase().replace(/\s+/g, '-')}`;
+                const checkboxHtml = `
+                    <input type="checkbox" id="${id}" class="category-checkbox" value="${category}" checked>
+                    <label for="${id}" class="category-label">
+                        <span class="checkbox-custom"></span>
+                        <span>${category}</span>
+                        <span class="ml-auto text-gray-500 text-sm">${flashcards.filter(card => card.category === category).length}</span>
+                    </label>
+                `;
+                const div = document.createElement('div');
+                div.innerHTML = checkboxHtml;
+                categoryCheckboxes.appendChild(div);
+                selectedCategories.add(category);
+            });
+            
+            // Add event listeners for checkboxes
+            document.querySelectorAll('.category-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', () => {
+                    if (checkbox.checked) {
+                        selectedCategories.add(checkbox.value);
+                    } else {
+                        selectedCategories.delete(checkbox.value);
+                    }
+                    filterFlashcards();
+                });
+            });
+            
+            updateCard();
+        }
+
+        function filterFlashcards() {
+            if (selectedCategories.size === 0) {
+                filteredFlashcards = [];
+            } else {
+                filteredFlashcards = flashcards.filter(card => selectedCategories.has(card.category));
+            }
+            currentCardIndex = 0;
+            updateCard();
+            updateProgress();
+        }
+
+        function updateCardContent(card) {
+            if (!card) return;
+            const frontContent = document.querySelector('.flashcard-front .card-content');
+            const backContent = document.querySelector('.flashcard-back .card-content');
+            
+            frontContent.innerHTML = `
+                <h3 class="text-3xl mb-4 font-irish">${showingEnglish ? card.english : card.irish}</h3>
+                <p class="text-sm text-green-600">${card.category}</p>
+            `;
+            backContent.innerHTML = `
+                <h3 class="text-3xl mb-4 font-irish">${showingEnglish ? card.irish : card.english}</h3>
+                <p class="text-sm text-green-600">${card.category}</p>
+            `;
+        }
+
+        function updateProgress() {
+            const progressText = document.getElementById('progress');
+            progressText.textContent = `${currentCardIndex + 1}/${filteredFlashcards.length}`;
+        }
+
+        function updateCard() {
+            if (filteredFlashcards.length === 0) {
+                // Handle empty filtered results
+                const frontContent = document.querySelector('.flashcard-front .card-content');
+                const backContent = document.querySelector('.flashcard-back .card-content');
+                frontContent.innerHTML = '<p class="text-xl text-gray-500">No flashcards in this category</p>';
+                backContent.innerHTML = '<p class="text-xl text-gray-500">No flashcards in this category</p>';
+                return;
+            }
+
+            const currentCard = document.getElementById('currentCard');
+            if (currentCard.classList.contains('flipped')) {
+                currentCard.classList.remove('flipped');
+                showingEnglish = false;
+            }
+
+            if (currentCardIndex >= filteredFlashcards.length) {
+                currentCardIndex = 0;
+            }
+
+            updateCardContent(filteredFlashcards[currentCardIndex]);
+            updateProgress();
+        }
 
         let scores = {
             current_streak: 0,
@@ -304,22 +511,10 @@
             total_attempts: 0
         };
 
-        async function loadFlashcards() {
-            const response = await fetch('/api/flashcards');
-            flashcards = await response.json();
-            updateCardContent(flashcards[0]);
-            updateProgress();
-        }
-
-        function updateCardContent(card) {
-            document.getElementById('cardTextFront').textContent = card.irish;
-            document.getElementById('cardTextBack').textContent = card.english;
-            document.getElementById('categoryFront').textContent = card.category;
-            document.getElementById('categoryBack').textContent = card.category;
-        }
-
-        function updateProgress() {
-            document.getElementById('progress').textContent = `${currentIndex + 1}/${flashcards.length}`;
+        async function loadScores() {
+            const response = await fetch('/api/score');
+            scores = await response.json();
+            updateScoreDisplay();
         }
 
         function updateScoreDisplay() {
@@ -339,36 +534,6 @@
                 currentStreakEl.classList.add('score-increase');
                 setTimeout(() => currentStreakEl.classList.remove('score-increase'), 500);
             }
-        }
-
-        function updateCard() {
-            const currentCard = document.getElementById('currentCard');
-            currentCard.classList.add('fade-out');
-            
-            setTimeout(() => {
-                // Update card content while it's invisible
-                updateCardContent(flashcards[currentIndex]);
-                currentCard.classList.remove('flipped');
-                showingEnglish = false;
-                
-                // Fade back in
-                currentCard.classList.remove('fade-out');
-                currentCard.classList.add('fade-in');
-                
-                // Update progress
-                document.getElementById('progress').textContent = `${currentIndex + 1}/${flashcards.length}`;
-                
-                // Remove fade-in class after animation
-                setTimeout(() => {
-                    currentCard.classList.remove('fade-in');
-                }, 300);
-            }, 300);
-        }
-
-        async function loadScores() {
-            const response = await fetch('/api/score');
-            scores = await response.json();
-            updateScoreDisplay();
         }
 
         document.getElementById('flipBtn').addEventListener('click', () => {
@@ -395,7 +560,7 @@
                 updateScoreDisplay();
                 
                 // Move to next card
-                currentIndex = (currentIndex + 1) % flashcards.length;
+                currentCardIndex = (currentCardIndex + 1) % filteredFlashcards.length;
                 updateCard();
             } catch (error) {
                 console.error('Error updating score:', error);
@@ -422,6 +587,38 @@
                 document.getElementById('incorrectBtn').classList.remove('scale-110', 'opacity-75');
             }, 200);
             submitAnswer(false);
+        });
+
+        // Side menu controls
+        document.getElementById('openSideMenu').addEventListener('click', () => {
+            document.querySelector('.side-menu').classList.add('open');
+            document.querySelector('.side-menu-overlay').classList.add('active');
+        });
+
+        document.getElementById('closeSideMenu').addEventListener('click', () => {
+            document.querySelector('.side-menu').classList.remove('open');
+            document.querySelector('.side-menu-overlay').classList.remove('active');
+        });
+
+        document.querySelector('.side-menu-overlay').addEventListener('click', () => {
+            document.querySelector('.side-menu').classList.remove('open');
+            document.querySelector('.side-menu-overlay').classList.remove('active');
+        });
+
+        document.getElementById('selectAllCategories').addEventListener('click', () => {
+            document.querySelectorAll('.category-checkbox').forEach(checkbox => {
+                checkbox.checked = true;
+                selectedCategories.add(checkbox.value);
+            });
+            filterFlashcards();
+        });
+
+        document.getElementById('deselectAllCategories').addEventListener('click', () => {
+            document.querySelectorAll('.category-checkbox').forEach(checkbox => {
+                checkbox.checked = false;
+                selectedCategories.delete(checkbox.value);
+            });
+            filterFlashcards();
         });
 
         // Add decorative shamrocks
