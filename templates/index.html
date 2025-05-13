@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Cleachtadh Laethúil - Irish Flashcards</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
@@ -42,6 +42,16 @@
             height: 300px;
             transform-style: preserve-3d;
             transition: transform 0.6s;
+        }
+        
+        @media (max-width: 640px) {
+            .flashcard {
+                height: 230px;
+            }
+            
+            .flashcard-front, .flashcard-back {
+                padding: 1rem;
+            }
         }
 
         .flashcard.flipped {
@@ -101,10 +111,6 @@
             background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
         }
 
-        .celtic-pattern {
-            background-image: url('data:image/svg+xml,<svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><path d="M20 0C8.954 0 0 8.954 0 20s8.954 20 20 20 20-8.954 20-20S31.046 0 20 0zm0 36c-8.837 0-16-7.163-16-16S11.163 4 20 4s16 7.163 16 16-7.163 16-16 16z" fill="%23166534" fill-opacity="0.1"/></svg>');
-        }
-
         .btn {
             transition: all 0.3s ease;
             position: relative;
@@ -140,35 +146,8 @@
             }
         }
 
-        #correctBtn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(4, 120, 87, 0.4);
-        }
-
-        #incorrectBtn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(220, 38, 38, 0.4);
-        }
-
-        #flipBtn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.4);
-        }
-
-        .celtic-border {
-            background-image: linear-gradient(45deg, #2C5530, #4A7856);
-            border-radius: 15px;
-            padding: 2px;
-        }
-
-        .flashcard-container {
-            background: white;
-            border-radius: 15px;
-            padding: 2rem;
-        }
-
         .score-panel {
-            background: linear-gradient(to right, rgba(255,255,255,0.95), rgba(255,255,255,0.98));
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(8px);
             border: 1px solid rgba(167, 243, 208, 0.2);
         }
@@ -185,28 +164,21 @@
         }
 
         .score-increase {
-            animation: scorePopup 0.5s ease-out;
+            animation: scoreUp 0.5s ease-out;
         }
 
-        @keyframes scorePopup {
+        @keyframes scoreUp {
             0% { transform: scale(1); }
             50% { transform: scale(1.2); }
             100% { transform: scale(1); }
         }
 
-        .shamrock {
-            position: absolute;
-            width: 30px;
-            height: 30px;
-            opacity: 0.1;
-        }
-
-        /* Side Menu Styles */
         .side-menu {
             position: fixed;
-            right: -300px;
             top: 0;
-            width: 300px;
+            right: -100%;
+            width: 85%;
+            max-width: 300px;
             height: 100vh;
             background: white;
             box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
@@ -237,7 +209,8 @@
         }
 
         /* Checkbox styles */
-        .category-checkbox {
+        .category-checkbox,
+        .type-checkbox {
             display: none;
         }
 
@@ -247,6 +220,7 @@
             padding: 0.5rem 1rem;
             cursor: pointer;
             transition: background-color 0.2s;
+            border-radius: 0.25rem;
         }
 
         .category-label:hover {
@@ -254,49 +228,91 @@
         }
 
         .checkbox-custom {
-            width: 20px;
-            height: 20px;
+            width: 22px;
+            height: 22px;
             border: 2px solid #047857;
             border-radius: 4px;
             margin-right: 12px;
             position: relative;
             transition: all 0.2s;
+            flex-shrink: 0;
         }
 
-        .category-checkbox:checked + .category-label .checkbox-custom {
+        .category-checkbox:checked + .category-label .checkbox-custom,
+        .type-checkbox:checked + .category-label .checkbox-custom {
             background-color: #047857;
         }
 
-        .category-checkbox:checked + .category-label .checkbox-custom::after {
+        .category-checkbox:checked + .category-label .checkbox-custom::after,
+        .type-checkbox:checked + .category-label .checkbox-custom::after {
             content: '';
             position: absolute;
-            left: 6px;
-            top: 2px;
-            width: 5px;
-            height: 10px;
+            left: 7px;
+            top: 3px;
+            width: 6px;
+            height: 11px;
             border: solid white;
             border-width: 0 2px 2px 0;
             transform: rotate(45deg);
         }
+
+        @media (max-width: 640px) {
+            .score-panel {
+                padding: 0.75rem !important;
+            }
+            
+            .streak-counter {
+                padding: 0.5rem 0.75rem !important;
+            }
+            
+            .card-content p.text-3xl {
+                font-size: 1.5rem;
+                line-height: 2rem;
+            }
+        }
     </style>
 </head>
-<body class="bg-gradient-to-br from-green-50 to-green-100 min-h-screen celtic-pattern py-8">
+<body class="bg-white min-h-screen py-4 sm:py-8">
     <!-- Side Menu -->
     <div class="side-menu-overlay"></div>
     <div class="side-menu">
-        <div class="p-6">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-xl font-bold text-green-800">Categories</h3>
+        <div class="p-4 sm:p-6">
+            <div class="flex justify-between items-center mb-4 sm:mb-6">
+                <h3 class="text-lg sm:text-xl font-bold text-green-800">Filters</h3>
                 <button id="closeSideMenu" class="text-gray-500 hover:text-gray-700">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
             </div>
-            <div id="categoryCheckboxes" class="space-y-2">
+            
+            <!-- Content Type Filter -->
+            <div class="mb-6">
+                <h4 class="font-medium text-green-700 mb-2">Content Type</h4>
+                <div class="space-y-2">
+                    <div>
+                        <input type="checkbox" id="type-word" value="word" class="type-checkbox" checked>
+                        <label for="type-word" class="category-label flex items-center py-2 px-3 rounded hover:bg-green-50 transition-colors">
+                            <div class="checkbox-custom mr-3"></div>
+                            <span class="font-medium">Words</span>
+                        </label>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="type-sentence" value="sentence" class="type-checkbox" checked>
+                        <label for="type-sentence" class="category-label flex items-center py-2 px-3 rounded hover:bg-green-50 transition-colors">
+                            <div class="checkbox-custom mr-3"></div>
+                            <span class="font-medium">Sentences</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Categories Filter -->
+            <h4 class="font-medium text-green-700 mb-2">Categories</h4>
+            <div id="categoryCheckboxes" class="space-y-2 max-h-60 overflow-y-auto">
                 <!-- Checkboxes will be added here -->
             </div>
-            <div class="mt-6">
+            <div class="mt-4 sm:mt-6">
                 <button id="selectAllCategories" class="text-sm text-green-600 hover:text-green-800 mr-4">Select All</button>
                 <button id="deselectAllCategories" class="text-sm text-green-600 hover:text-green-800">Deselect All</button>
             </div>
@@ -306,14 +322,14 @@
     <!-- Start Screen -->
     <div id="startScreen" class="start-screen fixed inset-0 flex items-center justify-center z-10">
         <div class="max-w-2xl mx-auto px-4 text-center">
-            <div class="bg-white bg-opacity-95 p-8 rounded-2xl shadow-xl">
-                <h1 class="font-irish text-6xl font-semibold text-green-800 mb-4">Cleachtadh Laethúil</h1>
-                <p class="text-2xl text-green-600 mb-8 font-irish">Daily Irish Language Practice</p>
+            <div class="bg-white bg-opacity-95 p-4 sm:p-8 rounded-2xl shadow-xl">
+                <h1 class="font-irish text-4xl sm:text-5xl md:text-6xl font-semibold text-green-800 mb-2 sm:mb-4">Cleachtadh Laethúil</h1>
+                <p class="text-xl sm:text-2xl text-green-600 mb-4 sm:mb-8 font-irish">Daily Irish Language Practice</p>
                 
-                <div class="space-y-6 mb-8">
-                    <div class="p-4 bg-green-50 rounded-lg">
-                        <h2 class="text-xl font-semibold text-green-800 mb-2">How it works:</h2>
-                        <ul class="text-green-700 space-y-2">
+                <div class="space-y-4 sm:space-y-6 mb-6 sm:mb-8">
+                    <div class="p-3 sm:p-4 bg-green-50 rounded-lg">
+                        <h2 class="text-lg sm:text-xl font-semibold text-green-800 mb-2">How it works:</h2>
+                        <ul class="text-green-700 space-y-1 sm:space-y-2 text-sm sm:text-base">
                             <li>• View Irish words and phrases</li>
                             <li>• Flip cards to see translations</li>
                             <li>• Practice daily to improve</li>
@@ -321,7 +337,7 @@
                     </div>
                 </div>
 
-                <button id="beginBtn" class="btn bg-green-600 text-white px-8 py-4 rounded-lg hover:bg-green-700 font-medium text-xl font-irish transform transition hover:scale-105">
+                <button id="beginBtn" class="btn bg-green-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg hover:bg-green-700 font-medium text-lg sm:text-xl font-irish transform transition hover:scale-105">
                     Tosaigh ag Foghlaim
                 </button>
             </div>
@@ -329,39 +345,39 @@
     </div>
 
     <!-- Practice Screen -->
-    <div id="practiceScreen" class="practice-screen min-h-screen py-6 opacity-0 pointer-events-none transition-opacity duration-500">
+    <div id="practiceScreen" class="practice-screen min-h-screen py-4 sm:py-6 opacity-0 pointer-events-none transition-opacity duration-500">
         <div class="container mx-auto px-4">
-            <h2 class="text-4xl font-bold text-center text-green-800 mb-2 font-irish">Cleachtadh Laethúil</h2>
-            <p class="text-center text-green-600 mb-6 italic">Daily Practice</p>
+            <h2 class="text-3xl sm:text-4xl font-bold text-center text-green-800 mb-2 font-irish">Cleachtadh Laethúil</h2>
+            <p class="text-center text-green-600 mb-4 sm:mb-6 italic">Daily Practice</p>
             
             <!-- Filter Button -->
-            <div class="max-w-md mx-auto mb-8 text-center">
-                <button id="openSideMenu" class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors duration-200">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div class="max-w-md mx-auto mb-4 sm:mb-8 text-center">
+                <button id="openSideMenu" class="inline-flex items-center px-3 sm:px-4 py-1 sm:py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors duration-200 text-sm sm:text-base">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5 mr-1 sm:mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
                     </svg>
                     Filter Categories
                 </button>
             </div>
 
-            <div class="max-w-lg mx-auto">
+            <div class="max-w-lg mx-auto px-2 sm:px-0">
                 <!-- Score Panel -->
-                <div class="score-panel mb-6 p-4 rounded-xl shadow-lg flex items-center justify-between">
-                    <div class="flex items-center space-x-6">
+                <div class="score-panel mb-4 sm:mb-6 p-3 sm:p-4 rounded-xl shadow-lg flex flex-wrap sm:flex-nowrap items-center justify-between">
+                    <div class="flex items-center space-x-3 sm:space-x-6 w-full sm:w-auto justify-around sm:justify-start mb-2 sm:mb-0">
                         <div class="text-center">
-                            <div class="streak-counter text-white px-4 py-2 rounded-lg">
-                                <p class="text-sm font-medium">Streak</p>
-                                <p id="currentStreak" class="text-2xl font-bold">0</p>
+                            <div class="streak-counter text-white px-3 sm:px-4 py-1 sm:py-2 rounded-lg">
+                                <p class="text-xs sm:text-sm font-medium">Streak</p>
+                                <p id="currentStreak" class="text-xl sm:text-2xl font-bold">0</p>
                             </div>
                         </div>
                         <div class="text-center">
-                            <p class="text-sm text-green-700">Best Streak</p>
-                            <p id="bestStreak" class="text-xl font-bold text-green-800">0</p>
+                            <p class="text-xs sm:text-sm text-green-700">Best Streak</p>
+                            <p id="bestStreak" class="text-lg sm:text-xl font-bold text-green-800">0</p>
                         </div>
                     </div>
-                    <div class="text-right">
-                        <p class="text-sm text-green-700">Success Rate</p>
-                        <p id="successRate" class="text-xl font-bold text-green-800">0%</p>
+                    <div class="text-center w-full sm:w-auto">
+                        <p class="text-xs sm:text-sm text-green-700">Success Rate</p>
+                        <p id="successRate" class="text-lg sm:text-xl font-bold text-green-800">0%</p>
                     </div>
                 </div>
 
@@ -371,31 +387,31 @@
                         <div id="currentCard" class="flashcard card-texture">
                             <div class="flashcard-front">
                                 <div class="card-content">
-                                    <p id="cardTextFront" class="text-3xl font-semibold mb-4 text-green-800 font-irish"></p>
-                                    <p id="categoryFront" class="text-sm text-green-600 font-medium"></p>
+                                    <p id="cardTextFront" class="text-2xl sm:text-3xl font-semibold mb-2 sm:mb-4 text-green-800 font-irish"></p>
+                                    <p id="categoryFront" class="text-xs sm:text-sm text-green-600 font-medium"></p>
                                 </div>
                             </div>
                             <div class="flashcard-back">
                                 <div class="card-content">
-                                    <p id="cardTextBack" class="text-3xl font-semibold mb-4 text-green-800 font-irish"></p>
-                                    <p id="categoryBack" class="text-sm text-green-600 font-medium"></p>
+                                    <p id="cardTextBack" class="text-2xl sm:text-3xl font-semibold mb-2 sm:mb-4 text-green-800 font-irish"></p>
+                                    <p id="categoryBack" class="text-xs sm:text-sm text-green-600 font-medium"></p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="mt-6 flex justify-center space-x-4">
-                    <button id="flipBtn" class="btn bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 font-medium font-irish transform transition-all duration-300">Cas</button>
-                    <div class="space-x-2">
-                        <button id="correctBtn" class="btn bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 font-medium font-irish transform transition-all duration-300">Ceart ✓</button>
-                        <button id="incorrectBtn" class="btn bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 font-medium font-irish transform transition-all duration-300">Mícheart ✗</button>
+                <div class="mt-4 sm:mt-6 flex flex-col sm:flex-row justify-center gap-2 sm:gap-4">
+                    <button id="flipBtn" class="btn bg-blue-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg hover:bg-blue-700 font-medium font-irish transform transition-all duration-300 w-full sm:w-auto">Cas</button>
+                    <div class="flex space-x-2 w-full">
+                        <button id="correctBtn" class="btn bg-green-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg hover:bg-green-700 font-medium font-irish transform transition-all duration-300 flex-1">Ceart ✓</button>
+                        <button id="incorrectBtn" class="btn bg-red-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg hover:bg-red-700 font-medium font-irish transform transition-all duration-300 flex-1">Mícheart ✗</button>
                     </div>
                 </div>
 
                 <div class="mt-4 text-center">
-                    <div class="inline-block bg-white rounded-full px-4 py-2 shadow-sm">
-                        <p class="text-green-700">Dul chun cinn: <span id="progress" class="font-medium">0/0</span></p>
+                    <div class="inline-block bg-white rounded-full px-3 sm:px-4 py-1 sm:py-2 shadow-sm">
+                        <p class="text-xs sm:text-sm text-green-700">Dul chun cinn: <span id="progress" class="font-medium">0/0</span></p>
                     </div>
                 </div>
             </div>
@@ -408,6 +424,7 @@
         let showingEnglish = false;
         let filteredFlashcards = [];
         let selectedCategories = new Set();
+        let selectedTypes = new Set(["word", "sentence"]);
 
         // Fisher-Yates shuffle algorithm
         function shuffleArray(array) {
@@ -424,27 +441,29 @@
             filteredFlashcards = [...flashcards];
             shuffleArray(filteredFlashcards);
             
-            // Populate category checkboxes
+            // Get unique categories
             const categories = [...new Set(flashcards.map(card => card.category))].sort();
+            
+            // Create checkboxes for each category
             const categoryCheckboxes = document.getElementById('categoryCheckboxes');
+            categoryCheckboxes.innerHTML = '';
             
             categories.forEach(category => {
-                const id = `category-${category.toLowerCase().replace(/\s+/g, '-')}`;
+                const id = `category-${category.replace(/\s+/g, '-').toLowerCase()}`;
+                const div = document.createElement('div');
                 const checkboxHtml = `
-                    <input type="checkbox" id="${id}" class="category-checkbox" value="${category}" checked>
+                    <input type="checkbox" id="${id}" value="${category}" class="category-checkbox" checked>
                     <label for="${id}" class="category-label">
-                        <span class="checkbox-custom"></span>
+                        <div class="checkbox-custom"></div>
                         <span>${category}</span>
-                        <span class="ml-auto text-gray-500 text-sm">${flashcards.filter(card => card.category === category).length}</span>
                     </label>
                 `;
-                const div = document.createElement('div');
                 div.innerHTML = checkboxHtml;
                 categoryCheckboxes.appendChild(div);
                 selectedCategories.add(category);
             });
             
-            // Add event listeners for checkboxes
+            // Add event listeners for category checkboxes
             document.querySelectorAll('.category-checkbox').forEach(checkbox => {
                 checkbox.addEventListener('change', () => {
                     if (checkbox.checked) {
@@ -456,39 +475,61 @@
                 });
             });
             
+            // Add event listeners for type checkboxes
+            document.querySelectorAll('.type-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', () => {
+                    if (checkbox.checked) {
+                        selectedTypes.add(checkbox.value);
+                    } else {
+                        selectedTypes.delete(checkbox.value);
+                    }
+                    filterFlashcards();
+                });
+            });
+            
             updateCard();
         }
 
         function filterFlashcards() {
-            if (selectedCategories.size === 0) {
+            if (selectedCategories.size === 0 || selectedTypes.size === 0) {
                 filteredFlashcards = [];
+                // Show a message in the card when no categories or types are selected
+                const frontContent = document.querySelector('.flashcard-front .card-content');
+                const backContent = document.querySelector('.flashcard-back .card-content');
+                
+                let message = "No cards available";
+                let instruction = "Please select at least one category";
+                
+                if (selectedTypes.size === 0) {
+                    instruction = "Please select at least one content type (Words/Sentences)";
+                }
+                if (selectedCategories.size === 0 && selectedTypes.size === 0) {
+                    instruction = "Please select at least one category and content type";
+                }
+                
+                frontContent.innerHTML = `
+                    <p class="text-xl sm:text-2xl font-semibold mb-2 text-red-600">${message}</p>
+                    <p class="text-sm text-gray-600">${instruction}</p>
+                `;
+                
+                backContent.innerHTML = `
+                    <p class="text-xl sm:text-2xl font-semibold mb-2 text-red-600">${message}</p>
+                    <p class="text-sm text-gray-600">${instruction}</p>
+                `;
+                
+                // Hide the progress indicator when no categories are selected
+                document.getElementById('progress').textContent = '0/0';
+                return;
             } else {
-                filteredFlashcards = flashcards.filter(card => selectedCategories.has(card.category));
-                shuffleArray(filteredFlashcards); // Shuffle when filtering
+                filteredFlashcards = flashcards.filter(card => 
+                    selectedCategories.has(card.category) && 
+                    (card.type ? selectedTypes.has(card.type) : true) // Handle cards that might not have a type field
+                );
+                shuffleArray(filteredFlashcards);
             }
+            
             currentCardIndex = 0;
             updateCard();
-            updateProgress();
-        }
-
-        function updateCardContent(card) {
-            if (!card) return;
-            const frontContent = document.querySelector('.flashcard-front .card-content');
-            const backContent = document.querySelector('.flashcard-back .card-content');
-            
-            frontContent.innerHTML = `
-                <h3 class="text-3xl mb-4 font-irish">${showingEnglish ? card.english : card.irish}</h3>
-                <p class="text-sm text-green-600">${card.category}</p>
-            `;
-            backContent.innerHTML = `
-                <h3 class="text-3xl mb-4 font-irish">${showingEnglish ? card.irish : card.english}</h3>
-                <p class="text-sm text-green-600">${card.category}</p>
-            `;
-        }
-
-        function updateProgress() {
-            const progressText = document.getElementById('progress');
-            progressText.textContent = `${currentCardIndex + 1}/${filteredFlashcards.length}`;
         }
 
         function updateCard() {
@@ -496,25 +537,56 @@
                 // Handle empty filtered results
                 const frontContent = document.querySelector('.flashcard-front .card-content');
                 const backContent = document.querySelector('.flashcard-back .card-content');
-                frontContent.innerHTML = '<p class="text-xl text-gray-500">No flashcards in this category</p>';
-                backContent.innerHTML = '<p class="text-xl text-gray-500">No flashcards in this category</p>';
+                
+                frontContent.innerHTML = `
+                    <p class="text-xl sm:text-2xl font-semibold mb-2 text-red-600">No cards available</p>
+                    <p class="text-sm text-gray-600">Please select at least one category</p>
+                `;
+                
+                backContent.innerHTML = `
+                    <p class="text-xl sm:text-2xl font-semibold mb-2 text-red-600">No cards available</p>
+                    <p class="text-sm text-gray-600">Please select at least one category</p>
+                `;
+                
+                // Update progress to show 0/0
+                document.getElementById('progress').textContent = '0/0';
                 return;
             }
-
-            // If we've reached the end of the deck, shuffle and start over
-            if (currentCardIndex >= filteredFlashcards.length) {
-                shuffleArray(filteredFlashcards);
-                currentCardIndex = 0;
-            }
-
-            const currentCard = document.getElementById('currentCard');
-            if (currentCard.classList.contains('flipped')) {
-                currentCard.classList.remove('flipped');
+            
+            const currentCard = filteredFlashcards[currentCardIndex];
+            
+            // Reset the card content to normal display
+            const frontContent = document.querySelector('.flashcard-front .card-content');
+            const backContent = document.querySelector('.flashcard-back .card-content');
+            
+            frontContent.innerHTML = `
+                <p id="cardTextFront" class="text-2xl sm:text-3xl font-semibold mb-2 sm:mb-4 text-green-800 font-irish"></p>
+                <p id="categoryFront" class="text-xs sm:text-sm text-green-600 font-medium"></p>
+            `;
+            
+            backContent.innerHTML = `
+                <p id="cardTextBack" class="text-2xl sm:text-3xl font-semibold mb-2 sm:mb-4 text-green-800 font-irish"></p>
+                <p id="categoryBack" class="text-xs sm:text-sm text-green-600 font-medium"></p>
+            `;
+            
+            document.getElementById('cardTextFront').textContent = currentCard.irish;
+            document.getElementById('categoryFront').textContent = currentCard.category;
+            
+            document.getElementById('cardTextBack').textContent = currentCard.english;
+            document.getElementById('categoryBack').textContent = currentCard.category;
+            
+            // Reset card to front if it was flipped
+            if (showingEnglish) {
+                document.getElementById('currentCard').classList.remove('flipped');
                 showingEnglish = false;
             }
-
-            updateCardContent(filteredFlashcards[currentCardIndex]);
+            
             updateProgress();
+        }
+
+        function updateProgress() {
+            const progressText = document.getElementById('progress');
+            progressText.textContent = `${currentCardIndex + 1}/${filteredFlashcards.length}`;
         }
 
         let scores = {
@@ -531,22 +603,21 @@
         }
 
         function updateScoreDisplay() {
-            const currentStreakEl = document.getElementById('currentStreak');
-            const bestStreakEl = document.getElementById('bestStreak');
-            const successRateEl = document.getElementById('successRate');
-
-            currentStreakEl.textContent = scores.current_streak;
-            bestStreakEl.textContent = scores.best_streak;
-            const rate = scores.total_attempts > 0 
-                ? Math.round((scores.total_correct / scores.total_attempts) * 100)
+            document.getElementById('currentStreak').textContent = scores.current_streak;
+            document.getElementById('bestStreak').textContent = scores.best_streak;
+            
+            const successRate = scores.total_attempts > 0 
+                ? Math.round((scores.total_correct / scores.total_attempts) * 100) 
                 : 0;
-            successRateEl.textContent = `${rate}%`;
-
-            // Add animation when streak changes
-            if (scores.current_streak > 0) {
-                currentStreakEl.classList.add('score-increase');
-                setTimeout(() => currentStreakEl.classList.remove('score-increase'), 500);
-            }
+            
+            document.getElementById('successRate').textContent = `${successRate}%`;
+            
+            // Add animation effect
+            const streakElement = document.getElementById('currentStreak');
+            streakElement.classList.add('score-increase');
+            setTimeout(() => {
+                streakElement.classList.remove('score-increase');
+            }, 500);
         }
 
         document.getElementById('flipBtn').addEventListener('click', () => {
@@ -633,16 +704,6 @@
             });
             filterFlashcards();
         });
-
-        // Add decorative shamrocks
-        for (let i = 0; i < 10; i++) {
-            const shamrock = document.createElement('div');
-            shamrock.className = 'shamrock';
-            shamrock.style.top = `${Math.random() * 100}%`;
-            shamrock.style.left = `${Math.random() * 100}%`;
-            shamrock.style.transform = `rotate(${Math.random() * 360}deg)`;
-            document.body.appendChild(shamrock);
-        }
     </script>
 </body>
 </html>
