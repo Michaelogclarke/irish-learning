@@ -451,6 +451,23 @@
         function filterFlashcards() {
             if (selectedCategories.size === 0) {
                 filteredFlashcards = [];
+                // Show a message in the card when no categories are selected
+                const frontContent = document.querySelector('.flashcard-front .card-content');
+                const backContent = document.querySelector('.flashcard-back .card-content');
+                
+                frontContent.innerHTML = `
+                    <p class="text-xl sm:text-2xl font-semibold mb-2 text-red-600">No cards available</p>
+                    <p class="text-sm text-gray-600">Please select at least one category</p>
+                `;
+                
+                backContent.innerHTML = `
+                    <p class="text-xl sm:text-2xl font-semibold mb-2 text-red-600">No cards available</p>
+                    <p class="text-sm text-gray-600">Please select at least one category</p>
+                `;
+                
+                // Hide the progress indicator when no categories are selected
+                document.getElementById('progress').textContent = '0/0';
+                return;
             } else {
                 filteredFlashcards = flashcards.filter(card => 
                     selectedCategories.has(card.category)
@@ -478,10 +495,26 @@
                     <p class="text-sm text-gray-600">Please select at least one category</p>
                 `;
                 
+                // Update progress to show 0/0
+                document.getElementById('progress').textContent = '0/0';
                 return;
             }
             
             const currentCard = filteredFlashcards[currentCardIndex];
+            
+            // Reset the card content to normal display
+            const frontContent = document.querySelector('.flashcard-front .card-content');
+            const backContent = document.querySelector('.flashcard-back .card-content');
+            
+            frontContent.innerHTML = `
+                <p id="cardTextFront" class="text-2xl sm:text-3xl font-semibold mb-2 sm:mb-4 text-green-800 font-irish"></p>
+                <p id="categoryFront" class="text-xs sm:text-sm text-green-600 font-medium"></p>
+            `;
+            
+            backContent.innerHTML = `
+                <p id="cardTextBack" class="text-2xl sm:text-3xl font-semibold mb-2 sm:mb-4 text-green-800 font-irish"></p>
+                <p id="categoryBack" class="text-xs sm:text-sm text-green-600 font-medium"></p>
+            `;
             
             document.getElementById('cardTextFront').textContent = currentCard.irish;
             document.getElementById('categoryFront').textContent = currentCard.category;
