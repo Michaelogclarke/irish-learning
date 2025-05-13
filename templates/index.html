@@ -409,10 +409,20 @@
         let filteredFlashcards = [];
         let selectedCategories = new Set();
 
+        // Fisher-Yates shuffle algorithm
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
         async function loadFlashcards() {
             const response = await fetch('/api/flashcards');
             flashcards = await response.json();
             filteredFlashcards = [...flashcards];
+            shuffleArray(filteredFlashcards);
             
             // Populate category checkboxes
             const categories = [...new Set(flashcards.map(card => card.category))].sort();
@@ -454,6 +464,7 @@
                 filteredFlashcards = [];
             } else {
                 filteredFlashcards = flashcards.filter(card => selectedCategories.has(card.category));
+                shuffleArray(filteredFlashcards); // Shuffle when filtering
             }
             currentCardIndex = 0;
             updateCard();
@@ -490,14 +501,16 @@
                 return;
             }
 
+            // If we've reached the end of the deck, shuffle and start over
+            if (currentCardIndex >= filteredFlashcards.length) {
+                shuffleArray(filteredFlashcards);
+                currentCardIndex = 0;
+            }
+
             const currentCard = document.getElementById('currentCard');
             if (currentCard.classList.contains('flipped')) {
                 currentCard.classList.remove('flipped');
                 showingEnglish = false;
-            }
-
-            if (currentCardIndex >= filteredFlashcards.length) {
-                currentCardIndex = 0;
             }
 
             updateCardContent(filteredFlashcards[currentCardIndex]);
