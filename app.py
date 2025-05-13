@@ -4,9 +4,61 @@ app = Flask(__name__)
 
 # Sample flashcard data - in a real app, this would come from a database
 flashcards = [
+    # Greetings and Common Phrases
     {"irish": "Dia duit", "english": "Hello", "category": "Greetings"},
     {"irish": "Slán", "english": "Goodbye", "category": "Greetings"},
     {"irish": "Go raibh maith agat", "english": "Thank you", "category": "Common phrases"},
+    {"irish": "Le do thoil", "english": "Please", "category": "Common phrases"},
+    
+    # Basic Expressions
+    {"irish": "Is maith liom", "english": "I like", "category": "Basic Expressions"},
+    {"irish": "Is breá liom", "english": "I love", "category": "Basic Expressions"},
+    {"irish": "Ní maith liom", "english": "I don't like", "category": "Basic Expressions"},
+    {"irish": "Is fuath liom", "english": "I hate", "category": "Basic Expressions"},
+    
+    # Shapes
+    {"irish": "Cearnóg", "english": "Square", "category": "Shapes"},
+    {"irish": "Ciorcal", "english": "Circle", "category": "Shapes"},
+    {"irish": "Triantán", "english": "Triangle", "category": "Shapes"},
+    {"irish": "Dronuilleog", "english": "Rectangle", "category": "Shapes"},
+    
+    # Days of the Week
+    {"irish": "Dé Luain", "english": "Monday", "category": "Days"},
+    {"irish": "Dé Máirt", "english": "Tuesday", "category": "Days"},
+    {"irish": "Dé Céadaoin", "english": "Wednesday", "category": "Days"},
+    {"irish": "Déardaoin", "english": "Thursday", "category": "Days"},
+    {"irish": "Dé hAoine", "english": "Friday", "category": "Days"},
+    {"irish": "Dé Sathairn", "english": "Saturday", "category": "Days"},
+    {"irish": "Dé Domhnaigh", "english": "Sunday", "category": "Days"},
+    
+    # Months
+    {"irish": "Eanáir", "english": "January", "category": "Months"},
+    {"irish": "Feabhra", "english": "February", "category": "Months"},
+    {"irish": "Márta", "english": "March", "category": "Months"},
+    {"irish": "Aibreán", "english": "April", "category": "Months"},
+    {"irish": "Bealtaine", "english": "May", "category": "Months"},
+    {"irish": "Meitheamh", "english": "June", "category": "Months"},
+    {"irish": "Iúil", "english": "July", "category": "Months"},
+    {"irish": "Lúnasa", "english": "August", "category": "Months"},
+    {"irish": "Meán Fómhair", "english": "September", "category": "Months"},
+    {"irish": "Deireadh Fómhair", "english": "October", "category": "Months"},
+    {"irish": "Samhain", "english": "November", "category": "Months"},
+    {"irish": "Nollaig", "english": "December", "category": "Months"},
+    
+    # Seasons
+    {"irish": "Earrach", "english": "Spring", "category": "Seasons"},
+    {"irish": "Samhradh", "english": "Summer", "category": "Seasons"},
+    {"irish": "Fómhar", "english": "Autumn", "category": "Seasons"},
+    {"irish": "Geimhreadh", "english": "Winter", "category": "Seasons"},
+    
+    # Holidays
+    {"irish": "Nollaig", "english": "Christmas", "category": "Holidays"},
+    {"irish": "Lá Fhéile Pádraig", "english": "St. Patrick's Day", "category": "Holidays"},
+    {"irish": "Oíche Shamhna", "english": "Halloween", "category": "Holidays"},
+    {"irish": "Lá Caille", "english": "New Year's Day", "category": "Holidays"},
+    {"irish": "Lá Breithe", "english": "Birthday", "category": "Personal Holidays"},
+    {"irish": "Lá na Máithreacha", "english": "Mother's Day", "category": "Personal Holidays"},
+    {"irish": "Lá na nAithreacha", "english": "Father's Day", "category": "Personal Holidays"}
 ]
 
 scores = {
