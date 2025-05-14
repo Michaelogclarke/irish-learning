@@ -1,8 +1,6 @@
 from flask import Flask, render_template, jsonify, request
-from whitenoise import WhiteNoise
 
 app = Flask(__name__)
-app.wsgi_app = WhiteNoise(app.wsgi_app, root='static/')
 # Sample flashcard data - in a real app, this would come from a database
 flashcards = [
     # Greetings and Common Phrases
@@ -113,14 +111,10 @@ scores = {
     "total_attempts": 0
 }
 
-@app.route('/test-manifest')
-def test_manifest():
-    return app.send_static_file('manifest.json')
 
-
-#@app.route('/')
-#def index():
- #   return render_template('index.html')
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 @app.route('/api/flashcards')
 def get_flashcards():
