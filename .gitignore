@@ -38,3 +38,7 @@ Thumbs.db
 # Application specific
 *.log
 .env
+
+# Node
+node_modules/
+
