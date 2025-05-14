@@ -1,7 +1,8 @@
 from flask import Flask, render_template, jsonify, request
+from whitenoise import WhiteNoise
 
 app = Flask(__name__)
-
+app.wsgi_app = WhiteNoise(app.wsgi_app, root='static/')
 # Sample flashcard data - in a real app, this would come from a database
 flashcards = [
     # Greetings and Common Phrases
