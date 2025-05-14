@@ -6,19 +6,11 @@
     <title>Cleachtadh Laethúil - Irish Flashcards</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
         <!-- Manifest file -->
-        <link rel="manifest" href="/manifest.json" />
-
-        <!-- PWA Meta Tags -->
-        <meta name="theme-color" content="#0f172a" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="Cleachtadh Laethúil" />
-
-        <!-- App Icons -->
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-        <link rel="icon" sizes="192x192" href="/icon-192.png" />
-        <link rel="icon" sizes="512x512" href="/icon-512.png" />
-
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='apple-touch-icon.png') }}">
+    <meta name="theme-color" content="#0f172a" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600&display=swap');
 
