@@ -68,7 +68,7 @@ flashcards = [
     {"irish": "Lá Breithe", "english": "Birthday", "category": "Personal Holidays", "type": "word"},
     {"irish": "Lá na Máithreacha", "english": "Mother's Day", "category": "Personal Holidays", "type": "word"},
     {"irish": "Lá na nAithreacha", "english": "Father's Day", "category": "Personal Holidays", "type": "word"},
-    
+    # start of sentences
     # Day-to-day Sentences
     {"irish": "Cá bhfuil an leithreas?", "english": "Where is the toilet?", "category": "Useful Sentences", "type": "sentence"},
     {"irish": "Cé mhéad atá air?", "english": "How much does it cost?", "category": "Useful Sentences", "type": "sentence"},
@@ -98,10 +98,10 @@ flashcards = [
     {"irish": "Cé mhéad a chosnaíonn ticéad?", "english": "How much does a ticket cost?", "category": "Travel Phrases", "type": "sentence"},
     
     # Emergency Sentences
-    {"irish": "Cabhair!", "english": "Help!", "category": "Emergency Phrases", "type": "sentence"},
+    {"irish": "Cuidiú liom!", "english": "Help Me!", "category": "Emergency Phrases", "type": "sentence"},
     {"irish": "Tá gá le dochtúir", "english": "A doctor is needed", "category": "Emergency Phrases", "type": "sentence"},
     {"irish": "Glaoigh ar otharcharr", "english": "Call an ambulance", "category": "Emergency Phrases", "type": "sentence"},
-    {"irish": "Tá mé tinn", "english": "I am sick", "category": "Emergency Phrases", "type": "sentence"},
+    {"irish": "Tá tinneas orm", "english": "I am sick", "category": "Emergency Phrases", "type": "sentence"},
     {"irish": "Cá bhfuil an cógaslann is gaire?", "english": "Where is the nearest pharmacy?", "category": "Emergency Phrases", "type": "sentence"}
 ]
 

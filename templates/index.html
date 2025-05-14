@@ -423,8 +423,8 @@
         let currentCardIndex = 0;
         let showingEnglish = false;
         let filteredFlashcards = [];
-        let selectedCategories = new Set();
-        let selectedTypes = new Set(["word", "sentence"]);
+        let selectedCategories = new Set(); // second option
+        let selectedTypes = new Set(["word", "sentence"]); // could be the issue
 
         // Fisher-Yates shuffle algorithm
         function shuffleArray(array) {
