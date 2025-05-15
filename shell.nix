@@ -5,5 +5,6 @@ pkgs.mkShell {
     python3
     python3Packages.flask
     python3Packages.python-dotenv
+    nodejs_20
   ];
 }
