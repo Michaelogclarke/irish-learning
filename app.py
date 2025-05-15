@@ -67,7 +67,7 @@ flashcards = [
     {"irish": "Lá Breithe", "english": "Birthday", "category": "Personal Holidays", "type": "word"},
     {"irish": "Lá na Máithreacha", "english": "Mother's Day", "category": "Personal Holidays", "type": "word"},
     {"irish": "Lá na nAithreacha", "english": "Father's Day", "category": "Personal Holidays", "type": "word"},
-    # start of sentences
+    
     # Day-to-day Sentences
     {"irish": "Cá bhfuil an leithreas?", "english": "Where is the toilet?", "category": "Useful Sentences", "type": "sentence"},
     {"irish": "Cé mhéad atá air?", "english": "How much does it cost?", "category": "Useful Sentences", "type": "sentence"},
@@ -81,7 +81,7 @@ flashcards = [
     {"irish": "Tá mé go maith, go raibh maith agat", "english": "I am fine, thank you", "category": "Useful Sentences", "type": "sentence"},
     
     # Restaurant Sentences
-    {"irish": "Ba mhaith liom bord a chur in áirithe", "english": "I would like to reserve a table", "category": "Restaurant Phrases", "type": "sentence"},
+    {"irish": "Ba mhaith liom table a chur in áirithe", "english": "I would like to reserve a table", "category": "Restaurant Phrases", "type": "sentence"},
     {"irish": "An biachlar, le do thoil", "english": "The menu, please", "category": "Restaurant Phrases", "type": "sentence"},
     {"irish": "Tá ocras orm", "english": "I am hungry", "category": "Restaurant Phrases", "type": "sentence"},
     {"irish": "Tá tart orm", "english": "I am thirsty", "category": "Restaurant Phrases", "type": "sentence"},
