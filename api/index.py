@@ -81,7 +81,7 @@ flashcards = [
     {"irish": "Tá mé go maith, go raibh maith agat", "english": "I am good, thank you", "category": "Useful Sentences", "type": "sentence"},
     
     # Restaurant Sentences
-    {"irish": "Ba mhaith liom bord a chur in áirithe", "english": "I would like to reserve a table", "category": "Restaurant Phrases", "type": "sentence"},
+    {"irish": "Ba mhaith liom tabla a chur in áirithe", "english": "I would like to reserve a table", "category": "Restaurant Phrases", "type": "sentence"},
     {"irish": "An biachlar, le do thoil", "english": "The menu, please", "category": "Restaurant Phrases", "type": "sentence"},
     {"irish": "Tá ocras orm", "english": "I am hungry", "category": "Restaurant Phrases", "type": "sentence"},
     {"irish": "Tá tart orm", "english": "I am thirsty", "category": "Restaurant Phrases", "type": "sentence"},
